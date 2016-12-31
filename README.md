@@ -1,10 +1,10 @@
-# docker-esp8226-micropython
-## MicroPython for the ESP8226 microcontroller
+## docker-esp8226-micropython
+### A MicroPython for the ESP8226 microcontroller development environment
 ======================
 
 A Docker image for building the [Micropython](https://micropython.org/) firmware for [ESP8266](https://en.wikipedia.org/wiki/ESP8266) boards.
 
-The ESP Open SDK takes a significant time to build extending the build time of the docker image.  Once the initial build is finished however, the resulting container can be used to build additional firmware binaries with shorter build times.
+The underlying [ESP Open SDK](https://github.com/pfalcon/esp-open-sdk) takes a significant time to build extending the build time of the docker image.  Once the initial build is finished however, the resulting container can be used to build additional firmware binaries with shorter build times.
 
 Requires:
   
@@ -16,7 +16,7 @@ Requires:
 Build Instructions
 ------------------
 
-Building the docker image compiles the [ESP Open SDK](https://github.com/pfalcon/esp-open-sdk), the MicroPython interpretor shell for unix and the vendor provided firmware binary of [Micropython](https://micropython.org/) for the [ESP8266](https://en.wikipedia.org/wiki/ESP8266) boards.  To specify a particular version of MicroPython provide the docker `--build-arg` option with the `VERSION` argument. 
+Building the docker image compiles the ESP Open SDK, the MicroPython interpreter shell for unix and the vendor provided firmware binary of Micropython for the ESP8266 boards.  To specify a particular version of MicroPython provide the docker `--build-arg` option with the `VERSION` argument. 
 
 ```bash
 bash ./projctl build
@@ -29,7 +29,7 @@ docker build -t micropython --build-arg VERSION=v1.8.6 .
 docker create --name micropython micropython
 ```
 
-Once the container is built the firmware can be copied to the host machine.
+Once the docker image is built the firmware can be copied to the host machine.
 
 ```bash
 bash ./projctl copy
@@ -85,4 +85,9 @@ or
 docker run --rm -it micropython /bin/bash -l
 ```
 
+Access the MicroPython interpreter shell for unix:
+
+```bash
+bash ./projctl unix
+```
 

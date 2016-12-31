@@ -1,0 +1,88 @@
+#!/bin/bash
+
+VENDOR_DIR="./vendor"
+
+SERIAL_PORT=${SERIAL_PORT:-"/dev/tty.SLAB_USBtoUART"}
+
+BIN_FILENAME=${BIN_FILENAME:-"firmware-combined.bin"}
+
+
+build_docker() {
+  docker build -t micropython . \
+  && docker rm -f micropython \
+  && docker create --name micropython micropython
+}
+
+build_firmware() {
+  docker run -rm -it micropython
+}
+
+manual_build() {
+  docker run --rm -it micropython /bin/bash -l
+}
+
+unix() {
+  docker run --rm -it micropython unix
+}
+
+connect() {
+  picocom -b 115200 "$SERIAL_PORT"
+}
+
+copy_firmware() {
+  echo "Copying firmware to current directory: $(pwd)/${BIN_FILENAME}"
+  docker cp micropython:/micropython/esp8266/build/firmware-combined.bin ${BIN_FILENAME}
+}
+
+erase_flash() {
+  echo "Erasing flash:"  
+  esptool.py --port "$SERIAL_PORT" erase_flash
+}
+
+inside_flash() {
+  echo "Writing flash from within container:"
+  docker run --rm -it --device "$SERIAL_PORT" --user root --workdir /micropython/esp8266 micropython make PORT="$SERIAL_PORT" deploy
+}
+
+write_flash() {
+  echo "Writing flash:"
+  esptool.py --port "$SERIAL_PORT" --baud 115200 write_flash --verify --flash_size=detect 0 "$BIN_FILENAME"
+}
+
+
+
+case "$@" in
+  "build")
+    build_docker
+    build_firmware
+    ;;
+  "build docker")
+    build_docker
+    ;;
+  "build firmware")
+    build_firmware
+    ;;
+  "copy")
+    copy_firmware
+    ;;
+  "erase")
+    erase_flash
+    ;;
+  "write")
+    write_flash
+    ;;
+  "manual")
+    manual_build
+    ;;
+  "unix")
+    unix
+    ;;
+  "connect")
+    connect
+    ;;
+  *)
+    build
+    ;;
+esac
+
+

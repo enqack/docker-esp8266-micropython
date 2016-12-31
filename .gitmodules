@@ -1,0 +1,6 @@
+[submodule "vendor/esp-open-sdk"]
+	path = vendor/esp-open-sdk
+	url = https://github.com/pfalcon/esp-open-sdk.git
+[submodule "vendor/micropython"]
+	path = vendor/micropython
+	url = https://github.com/micropython/micropython.git

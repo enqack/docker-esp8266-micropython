@@ -4,35 +4,36 @@ ARG VERSION=master
 
 RUN apt-get update \
     && apt-get install -y \
-        autoconf \
-        automake \
-        bash \
-        bison \
-        build-essential \
-        flex \
-        gawk \
-        gcc \
-        g++ \
-        git \
-        gperf \
-        help2man \
-        libexpat-dev \
-        libffi-dev \
-        libreadline-dev \
-        libtool \
-        libtool-bin \
-        make \
-        ncurses-dev \
-        pkg-config \
-        python \
-        python-dev \
-        python-serial \
-        python-setuptools \
-        texinfo \
-        sed \
-        unrar-free \
-        unzip \
-        wget \
+    apt-utils \
+    autoconf \
+    automake \
+    bash \
+    bison \
+    build-essential \
+    flex \
+    gawk \
+    gcc \
+    g++ \
+    git \
+    gperf \
+    help2man \
+    libexpat-dev \
+    libffi-dev \
+    libreadline-dev \
+    libtool \
+    libtool-bin \
+    make \
+    ncurses-dev \
+    pkg-config \
+    python \
+    python-dev \
+    python-serial \
+    python-setuptools \
+    texinfo \
+    sed \
+    unrar-free \
+    unzip \
+    wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --no-create-home micropython \
@@ -49,7 +50,7 @@ ENV PATH=/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
 
 USER root
 
-RUN cd /micropython/unix && make axtls && make
+RUN cd /micropython/ports/unix && make axtls && make
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh \
